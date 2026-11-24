@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BloodLink India — Verified Blood Banks & Emergency Donor Coordination Network</title>
+  <meta name="description" content="BloodLink India connects citizens in urgent need of blood with licensed blood banks and voluntary donors. Focus on Chandigarh, Mohali (SAS Nagar), Punjab, and Haryana.">
+  <meta name="theme-color" id="meta-theme-color" content="#F8F5F0">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('bloodlink-theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          var meta = document.getElementById('meta-theme-color');
+          if (meta) meta.setAttribute('content', '#141113');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23681A2A'><path d='M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z'/></svg>">
+  
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- Leaflet Map JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- ========================================================================
+       1. PUBLIC LANDING PAGE VIEW
+       ======================================================================== -->
+  <div id="public-landing-view">
+    
+    <!-- Public Navigation Bar -->
+    <header class="site-header">
+      <div class="container site-header-container">
+        <nav class="nav-wrapper" aria-label="Main Navigation">
+          <!-- Logo & Brand -->
+          <a href="#home" class="brand-logo" data-route="home">
+            <div class="brand-mark">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+              </svg>
+            </div>
+            <span class="brand-name">BloodLink <span style="font-size:0.875rem; color:var(--color-rose-500); font-weight:600;">India</span></span>
+            <span class="brand-badge">NBTC Standard</span>
+          </a>
+
+          <!-- Nav Links -->
+          <ul class="nav-links" id="site-nav-links">
+            <li><a href="#home" class="nav-link active" data-route="home">Home</a></li>
+            <li><a href="#blood-banks" class="nav-link" data-route="blood-banks">Nearby Blood Banks</a></li>
+            <li><a href="#donor-search" class="nav-link" data-route="donor-search">Find Donors</a></li>
+            <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+            <li><a href="#compatibility" class="nav-link">Compatibility</a></li>
+            <li><a href="#about-us" class="nav-link">About Us</a></li>
+            <li class="mobile-nav-actions">
+              <button class="btn btn-ghost btn-mobile-action" id="btn-mobile-login" data-route="login">Login</button>
+              <button class="btn btn-secondary btn-mobile-action" id="btn-mobile-register" data-route="register">Register</button>
+              <button class="btn btn-primary btn-mobile-action" id="btn-mobile-dashboard" data-route="dashboard">Enter Dashboard</button>
+            </li>
+          </ul>
+
+          <!-- Nav Actions -->
+          <div class="nav-actions">
+            <!-- Light/Dark Theme Toggle -->
+            <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle light/dark theme" title="Toggle theme">
+              <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              <span id="theme-toggle-label">Dark</span>
+            </button>
+            <button class="btn btn-ghost nav-btn-login" id="btn-open-login" data-route="login">Login</button>
+            <button class="btn btn-secondary nav-btn-register" id="btn-open-register" data-route="register">Register</button>
+            <button class="btn btn-primary nav-btn-dashboard" data-route="dashboard">Enter Dashboard</button>
+            <button class="mobile-toggle" id="mobile-nav-toggle" aria-label="Open Navigation Menu" aria-expanded="false">☰</button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <!-- Hero Text -->
+          <div class="hero-content">
+            <div class="eyebrow">India Blood Transfusion & Emergency Coordination</div>
+            <h1 class="hero-headline">
+              Every Drop <span class="accent-text">Connects</span> a Life.
+            </h1>
+            <p class="hero-subtext">
+              Find blood donors, request blood when it matters most, and help build a community where no one has to search alone.
+            </p>
+            
+            <div class="hero-buttons">
+              <button class="btn btn-primary btn-lg" data-route="donor-search">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                Find a Donor
+              </button>
+              <button class="btn btn-secondary btn-lg" data-route="register-donor">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7.5" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                Become a Donor
+              </button>
+            </div>
+
+            <!-- India Emergency Quick Search Bar -->
+            <div class="hero-quick-search" style="max-width:620px;">
+              <div class="hero-search-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                Quick Search Across Indian States & Districts
+              </div>
+              <div class="hero-search-fields" style="grid-template-columns: 1.2fr 1.2fr 1fr auto;">
+                <select id="hero-state-select" class="form-select" aria-label="Select Indian State">
+                  <!-- Populated dynamically via app.js -->
+                </select>
+
+                <select id="hero-district-select" class="form-select" aria-label="Select District">
+                  <option value="all">All Districts</option>
+                </select>
+
+                <select id="hero-blood-select" class="form-select" aria-label="Select Blood Group">
+                  <option value="all">All Groups</option>
+                  <option value="O-">O- (Universal)</option>
+                  <option value="O+">O+ Positive</option>
+                  <option value="A-">A- Negative</option>
+                  <option value="A+">A+ Positive</option>
+                  <option value="B-">B- Negative</option>
+                  <option value="B+">B+ Positive</option>
+                  <option value="AB-">AB- Negative</option>
+                  <option value="AB+">AB+ Positive</option>
+                </select>
+
+                <button class="btn btn-coral" id="hero-quick-search-btn">Search</button>
+              </div>
+              <div style="font-size:0.75rem; color:var(--color-text-muted); margin-top:8px;">
+                ★ Priority coverage: Chandigarh, Mohali (SAS Nagar), Panchkula, Punjab & Haryana.
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Abstract Visual Card -->
+          <div class="hero-visual-card">
+            <div class="hero-visual-wrapper">
+              <img src="assets/images/bloodlink_network_hero.jpg" alt="BloodLink Interconnected Donation Constellation" class="hero-art-img">
+              
+              <!-- Floating Card 1: Universal Donor -->
+              <div class="floating-badge badge-1">
+                <div class="floating-badge-icon">O-</div>
+                <div class="floating-badge-info">
+                  <h4>Universal Donor</h4>
+                  <p>Rare in India (~2%) • Emergency Red Cells</p>
+                </div>
+              </div>
+
+              <!-- Floating Card 2: Quick Response -->
+              <div class="floating-badge badge-2">
+                <div class="floating-badge-icon">B+</div>
+                <div class="floating-badge-info">
+                  <h4>High Demand (North India)</h4>
+                  <p>Vital for trauma & regular transfusions</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statutory NBTC Advisory Banner -->
+    <div class="container" style="margin-top: -20px; margin-bottom: 30px;">
+      <div class="statutory-nbtc-banner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <div>
+          <strong>Statutory Medical Advisory (NBTC & Drugs and Cosmetics Act, 1940):</strong>
+          Blood bank stock information is informational. Patients and families must directly confirm availability with the blood bank before travel, as hospital inventories fluctuate constantly. Blood donation and storage in India are strictly regulated.
+        </div>
+      </div>
+    </div>
+
+    <!-- Impact & Verified Statistics Section -->
+    <section class="impact-section" id="impact">
+      <div class="container">
+        <div class="impact-header">
+          <div>
+            <div class="eyebrow" style="margin-bottom:8px;">Verified Healthcare Data</div>
+            <h2>Connecting Blood Centers & Communities in India</h2>
+          </div>
+          <div class="impact-disclaimer-pill">
+            <span class="pulse-dot"></span>
+            <span id="source-attribution-text">MoHFW Verified Directory • Real-time DB • Never Fabricated</span>
+          </div>
+        </div>
+
+        <div class="impact-stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="pub-stat-blood-banks">24</div>
+            <div class="stat-label">Licensed Blood Banks</div>
+            <div class="stat-subtext">Verified under Drugs & Cosmetics Act</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-number" id="pub-stat-govt">14</div>
+            <div class="stat-label">Govt & Apex Centers</div>
+            <div class="stat-subtext">PGIMER, GMCH, GMSH, Civil Hospitals</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-number" id="pub-stat-donors">0</div>
+            <div class="stat-label">Voluntary Donors</div>
+            <div class="stat-subtext">DPDP Act 2023 protected real volunteers</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-number" id="pub-stat-tricity">12</div>
+            <div class="stat-label">Tricity Facilities</div>
+            <div class="stat-subtext">Chandigarh, Mohali (SAS Nagar), Panchkula</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section" id="how-it-works">
+      <div class="container">
+        <div class="section-title-area">
+          <div class="eyebrow">Three Simple Steps</div>
+          <h2>How BloodLink India Works</h2>
+          <p>
+            We remove panic and uncertainty by connecting patients directly to verified licensed blood centers and voluntary on-call donors across India.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          <!-- Step 1 -->
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number">01</div>
+              <div class="step-icon-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </div>
+            </div>
+            <h3>Search for a Compatible Donor or Blood Bank</h3>
+            <p>
+              Filter licensed government and private blood banks or verified voluntary donors by State, District, City, and Pincode across India.
+            </p>
+            <div class="step-highlight">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Verified licensed facilities & DPDP privacy
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number">02</div>
+              <div class="step-icon-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              </div>
+            </div>
+            <h3>Submit or Respond to a Blood Request</h3>
+            <p>
+              Hospital transfusion teams and verified patient families publish requisitions with required units and urgency levels (Critical, Urgent, Standard).
+            </p>
+            <div class="step-highlight">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Emergency coordination & broadcast
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number">03</div>
+              <div class="step-icon-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              </div>
+            </div>
+            <h3>Connect & Coordinate Through the Platform</h3>
+            <p>
+              Track donation milestones live through our 5-stage verification pipeline—from donor pledge to clinical crossmatching and transfusion.
+            </p>
+            <div class="step-highlight">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              NBTC compliant bedside tracking
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why BloodLink Section -->
+    <section class="why-section" id="why-bloodlink">
+      <div class="container">
+        <div class="section-title-area">
+          <div class="eyebrow">Platform Advantages</div>
+          <h2>Why Choose BloodLink India</h2>
+          <p>Built with healthcare professionals to bring speed, statutory compliance, and trust to blood coordination.</p>
+        </div>
+
+        <div class="why-grid">
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <h3>Quick Donor Discovery</h3>
+            <p>
+              Algorithmic matching finds compatible blood groups across Indian states and districts, highlighting universal donors (O-) and rare types.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <h3>Easy Blood Request Management</h3>
+            <p>
+              Hospital transfusion officers and families manage patient requisitions, units pledged, and crossmatching with full transparency.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <h3>Clear Request Status Tracking</h3>
+            <p>
+              Real-time milestone tracker keeps families informed from broadcast dispatch to donor arrival and laboratory screening clearance.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <h3>Community of Registered Donors</h3>
+            <p>
+              Real voluntary donors registered with informed consent under the DPDP Act 2023, strictly avoiding fabricated records.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Blood Compatibility Explorer -->
+    <section class="compatibility-section" id="compatibility">
+      <div class="container">
+        <div class="compat-card">
+          <div class="section-title-area" style="margin-bottom:24px;">
+            <div class="eyebrow">Medical Transfusion Guide</div>
+            <h2>Interactive Blood Compatibility Explorer</h2>
+            <p>Select any blood group to inspect giving and receiving compatibility rules according to clinical transfusion standards.</p>
+          </div>
+
+          <!-- Blood Group Buttons -->
+          <div class="compat-selector-row">
+            <button class="blood-btn blood-compat-btn" data-blood="O-">O- Negative</button>
+            <button class="blood-btn blood-compat-btn" data-blood="O+">O+ Positive</button>
+            <button class="blood-btn blood-compat-btn" data-blood="A-">A- Negative</button>
+            <button class="blood-btn blood-compat-btn" data-blood="A+">A+ Positive</button>
+            <button class="blood-btn blood-compat-btn" data-blood="B-">B- Negative</button>
+            <button class="blood-btn blood-compat-btn" data-blood="B+">B+ Positive</button>
+            <button class="blood-btn blood-compat-btn" data-blood="AB-">AB- Negative</button>
+            <button class="blood-btn blood-compat-btn" data-blood="AB+">AB+ Positive</button>
+          </div>
+
+          <!-- Active Details -->
+          <div class="compat-details-grid">
+            <div class="compat-box">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline></svg>
+                Can Donate Red Cells To:
+              </h4>
+              <div id="compat-can-give" class="compat-badge-list"></div>
+            </div>
+
+            <div class="compat-box">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>
+                Can Safely Receive Red Cells From:
+              </h4>
+              <div id="compat-can-receive" class="compat-badge-list"></div>
+            </div>
+          </div>
+
+          <div class="compat-summary-box">
+            <strong>Group <span id="compat-current-group">O-</span> Profile:</strong>
+            <span id="compat-rarity" style="margin-left:6px; font-weight:600; color:var(--color-burgundy-700);"></span> — 
+            <span id="compat-summary"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-banner">
+          <h2>Someone out there could be the connection you need.</h2>
+          <p>
+            Whether you are a hospital coordinating urgent surgical reserves in Chandigarh Tricity or an individual ready to save lives, join BloodLink India.
+          </p>
+          <div class="cta-buttons">
+            <button class="btn btn-cta-light btn-lg" data-route="donor-search">Find Blood Donors</button>
+            <button class="btn btn-coral btn-lg" data-route="register-donor">Join BloodLink</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Public Footer -->
+    <footer class="site-footer" id="about-us">
+      <div class="container">
+        <div class="footer-safety-notice">
+          <strong>National Healthcare & Legal Notice:</strong> BloodLink India operates under the statutory framework of the National Blood Transfusion Council (NBTC) and Drugs & Cosmetics Act, 1940. Volunteer donor records are processed under the Digital Personal Data Protection (DPDP) Act, 2023. Blood bank data is referenced from MoHFW and National Health Portal open datasets. Emergency Helplines: <strong>104</strong> (State Health), <strong>1075</strong> (National Health Helpline), <strong>108</strong> (Ambulance).
+        </div>
+
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="brand-logo">
+              <div class="brand-mark">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+              </div>
+              <span>BloodLink India</span>
+            </div>
+            <p>
+              Every Drop Connects a Life. Dedicated to transparent blood bank coordination across Chandigarh, Mohali, Panchkula, Punjab, Haryana, and India.
+            </p>
+          </div>
+
+          <div class="footer-col">
+            <h4>Verified Directory</h4>
+            <ul class="footer-links">
+              <li><a href="#blood-banks" data-route="blood-banks">Nearby Blood Banks</a></li>
+              <li><a href="https://eraktkosh.mohfw.gov.in/" target="_blank" rel="noopener">Official e-RaktKosh Portal ↗</a></li>
+              <li><a href="#donor-search" data-route="donor-search">Find Voluntary Donors</a></li>
+              <li><a href="#compatibility">Compatibility Matrix</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Hospitals</h4>
+            <ul class="footer-links">
+              <li><a href="#create-request" data-route="create-request">Submit Requisition</a></li>
+              <li><a href="#dashboard" data-route="dashboard">Hospital Portal</a></li>
+              <li><a href="#tracking" data-route="tracking">Bedside Tracking</a></li>
+              <li><a href="#about-us">PGIMER & Civil Hospitals</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Standards & Safety</h4>
+            <ul class="footer-links">
+              <li><a href="#about-us">NBTC Donor Eligibility</a></li>
+              <li><a href="#about-us">DPDP Act 2023 Privacy Policy</a></li>
+              <li><a href="#about-us">Terms of Coordination</a></li>
+              <li><a href="#about-us">Helpline Directory</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>© 2026 BloodLink India. Serving Chandigarh, Mohali, Punjab, Haryana & National Network.</div>
+          <div>Warm Ivory & Burgundy Aesthetic • NBTC Compliant</div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ========================================================================
+       AUTH VIEW 1: DEDICATED LOGIN PAGE
+       ======================================================================== -->
+  <div id="auth-login-view" class="auth-page-view" style="display:none;">
+    <header class="auth-page-nav">
+      <div class="container">
+        <div class="auth-nav-inner">
+          <a href="#home" class="brand-logo" data-route="home">
+            <div class="brand-mark">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+              </svg>
+            </div>
+            <span>BloodLink <span style="font-size:0.875rem; color:var(--color-rose-500); font-weight:600;">India</span></span>
+          </a>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button class="theme-toggle-btn theme-toggle-btn-sm" id="theme-toggle-btn-login" aria-label="Toggle theme" title="Toggle theme" onclick="document.getElementById('theme-toggle-btn').click()" style="padding:6px 10px;font-size:0.75rem;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <button class="btn btn-sm btn-ghost" data-route="home">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+              Back to Public Website
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="auth-page-body">
+      <div class="container">
+        <div class="auth-card-panel">
+          <div class="auth-card-header">
+            <div class="auth-badge-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h2>Sign In to BloodLink</h2>
+            <p>Access emergency donor coordination, hospital blood requisitions & verified blood bank network.</p>
+          </div>
+
+          <!-- Alert Notifications -->
+          <div id="login-alert-box" class="auth-alert error" style="display:none;" role="alert"></div>
+          <div id="login-success-box" class="auth-alert success" style="display:none;" role="alert"></div>
+
+          <!-- Login Form -->
+          <form id="form-user-login" class="auth-form" onsubmit="return false;" novalidate>
+            <div class="form-group">
+              <label for="login-input-email" class="form-label">
+                Official / Registered Email Address <span style="color:var(--color-burgundy-600);">*</span>
+              </label>
+              <div class="input-with-icon">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </span>
+                <input
+                  type="email"
+                  id="login-input-email"
+                  class="form-input with-icon"
+                  placeholder="e.g. transfusion.pgi@gov.in or your email"
+                  required
+                  autocomplete="email"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label for="login-input-password" class="form-label" style="margin-bottom:0;">
+                  Password <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <span style="font-size:0.75rem; color:var(--color-text-muted);">Demo: bloodlink123</span>
+              </div>
+              <div class="input-with-icon">
+                <span class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </span>
+                <input
+                  type="password"
+                  id="login-input-password"
+                  class="form-input with-icon"
+                  placeholder="Enter your account password"
+                  required
+                  autocomplete="current-password"
+                />
+                <button type="button" class="btn-toggle-password" id="btn-toggle-login-pwd" aria-label="Toggle Password Visibility">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin:16px 0 24px;">
+              <label class="form-checkbox-label" style="font-size:0.875rem;">
+                <input type="checkbox" id="login-remember-me" checked />
+                <span>Remember me on this browser</span>
+              </label>
+              <span class="nbtc-statutory-tag">NBTC Regulated</span>
+            </div>
+
+            <button type="submit" id="btn-submit-login" class="btn btn-primary btn-block btn-lg">
+              Sign In to BloodLink
+            </button>
+          </form>
+
+          <!-- 1-Click Demo Persona Switcher (For Testing) -->
+          <div class="auth-demo-divider">
+            <span>OR 1-CLICK DEMO ACCOUNTS</span>
+          </div>
+
+          <div class="auth-quick-demos">
+            <button type="button" class="quick-demo-pill demo-login-btn" data-role="coordinator">
+              <span class="pill-badge" style="background-color:var(--color-burgundy-700);">🏥 Hospital</span>
+              <strong>Dr. Raman Sharma</strong> (PGIMER Chandigarh)
+            </button>
+            <button type="button" class="quick-demo-pill demo-login-btn" data-role="donor">
+              <span class="pill-badge" style="background-color:var(--color-rose-600);">🩸 Donor</span>
+              <strong>Gurinder Singh</strong> (B+ • Mohali)
+            </button>
+          </div>
+
+          <!-- Auth Footer Links -->
+          <div class="auth-card-footer">
+            <p>
+              Don't have an account yet?
+              <a href="#register" class="auth-action-link" data-route="register">Register as Donor or Hospital</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       AUTH VIEW 2: DEDICATED REGISTRATION PAGE
+       ======================================================================== -->
+  <div id="auth-register-view" class="auth-page-view" style="display:none;">
+    <header class="auth-page-nav">
+      <div class="container">
+        <div class="auth-nav-inner">
+          <a href="#home" class="brand-logo" data-route="home">
+            <div class="brand-mark">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+              </svg>
+            </div>
+            <span>BloodLink <span style="font-size:0.875rem; color:var(--color-rose-500); font-weight:600;">India</span></span>
+          </a>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button class="theme-toggle-btn theme-toggle-btn-sm" id="theme-toggle-btn-register" aria-label="Toggle theme" title="Toggle theme" onclick="document.getElementById('theme-toggle-btn').click()" style="padding:6px 10px;font-size:0.75rem;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <button class="btn btn-sm btn-ghost" data-route="home">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+              Back to Public Website
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="auth-page-body">
+      <div class="container">
+        <div class="auth-card-panel auth-card-wide">
+          <div class="auth-card-header">
+            <div class="auth-badge-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7.5" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            </div>
+            <h2>Create Your BloodLink Account</h2>
+            <p>Join India's verified network of voluntary blood donors and hospital transfusion coordinators.</p>
+          </div>
+
+          <!-- Step 1: Role Selection Cards -->
+          <div class="role-selector-container">
+            <div class="role-selector-title">Select Your Role:</div>
+            <div class="role-select-cards-grid">
+              <div class="role-select-card active" id="role-select-card-donor" data-role="donor">
+                <div class="rsc-header">
+                  <div class="rsc-icon" style="background-color:rgba(188, 44, 26, 0.1); color:var(--color-burgundy-700);">🩸</div>
+                  <div class="rsc-check">✓</div>
+                </div>
+                <div class="rsc-title">Voluntary Blood Donor</div>
+                <div class="rsc-desc">I want to register as an emergency voluntary donor to save lives across Chandigarh, Punjab & Haryana.</div>
+              </div>
+
+              <div class="role-select-card" id="role-select-card-hospital" data-role="hospital">
+                <div class="rsc-header">
+                  <div class="rsc-icon" style="background-color:rgba(198, 83, 104, 0.15); color:var(--color-rose-600);">🏥</div>
+                  <div class="rsc-check">✓</div>
+                </div>
+                <div class="rsc-title">Hospital / Blood Bank</div>
+                <div class="rsc-desc">I am an authorized hospital medical officer or blood bank coordinator managing patient requisitions.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alert Notifications -->
+          <div id="register-alert-box" class="auth-alert error" style="display:none;" role="alert"></div>
+          <div id="register-success-box" class="auth-alert success" style="display:none;" role="alert"></div>
+
+          <!-- Registration Form -->
+          <form id="form-user-register" class="auth-form" onsubmit="return false;" novalidate>
+            <input type="hidden" id="reg-input-role" value="donor" />
+
+            <!-- Section A: Account Information -->
+            <div class="form-section-title">
+              <span>1</span> Account & Contact Credentials
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="reg-input-name" class="form-label">
+                  Full Legal Name <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="reg-input-name"
+                  class="form-input"
+                  placeholder="e.g. Jasleen Kaur"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="reg-input-email" class="form-label">
+                  Email Address <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="reg-input-email"
+                  class="form-input"
+                  placeholder="e.g. jasleen.k@example.com"
+                  required
+                  autocomplete="email"
+                />
+              </div>
+            </div>
+
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label for="reg-input-phone" class="form-label">
+                  Mobile Number (India) <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <div class="phone-input-wrap">
+                  <span class="phone-prefix">+91</span>
+                  <input
+                    type="tel"
+                    id="reg-input-phone"
+                    class="form-input phone-field"
+                    placeholder="98140-54321"
+                    maxlength="10"
+                    required
+                  />
+                </div>
+                <span class="form-hint">10 digits starting with 6, 7, 8, or 9</span>
+              </div>
+
+              <div class="form-group">
+                <label for="reg-input-password" class="form-label">
+                  Password <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <input
+                  type="password"
+                  id="reg-input-password"
+                  class="form-input"
+                  placeholder="Min. 6 characters"
+                  required
+                  autocomplete="new-password"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="reg-input-confirm-password" class="form-label">
+                  Confirm Password <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <input
+                  type="password"
+                  id="reg-input-confirm-password"
+                  class="form-input"
+                  placeholder="Re-enter password"
+                  required
+                  autocomplete="new-password"
+                />
+              </div>
+            </div>
+
+            <!-- Section B: Geographic Location (India Cascading) -->
+            <div class="form-section-title">
+              <span>2</span> Geographic Region & Pincode (India)
+            </div>
+
+            <div class="form-grid-4">
+              <div class="form-group">
+                <label for="reg-input-state" class="form-label">
+                  State / UT <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <select id="reg-input-state" class="form-select" required>
+                  <option value="">Loading States...</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="reg-input-district" class="form-label">
+                  District <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <select id="reg-input-district" class="form-select" required>
+                  <option value="">Select State First</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="reg-input-city" class="form-label">
+                  City / Locality <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="reg-input-city"
+                  class="form-input"
+                  placeholder="e.g. Mohali / Chandigarh"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="reg-input-pincode" class="form-label">
+                  6-Digit Pincode <span style="color:var(--color-burgundy-600);">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="reg-input-pincode"
+                  class="form-input"
+                  placeholder="160055"
+                  maxlength="6"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Section C1: Donor-Specific Fields -->
+            <div id="reg-donor-fields" class="role-specific-block">
+              <div class="form-section-title">
+                <span>3</span> NBTC Clinical Donor Eligibility
+              </div>
+
+              <div class="form-grid-4">
+                <div class="form-group">
+                  <label for="reg-input-blood-group" class="form-label">
+                    ABO & Rh Blood Group <span style="color:var(--color-burgundy-600);">*</span>
+                  </label>
+                  <select id="reg-input-blood-group" class="form-select">
+                    <option value="">Select Blood Group</option>
+                    <option value="A+">A+ (A Positive)</option>
+                    <option value="A-">A- (A Negative)</option>
+                    <option value="B+">B+ (B Positive)</option>
+                    <option value="B-">B- (B Negative)</option>
+                    <option value="AB+">AB+ (AB Positive)</option>
+                    <option value="AB-">AB- (AB Negative)</option>
+                    <option value="O+">O+ (O Positive)</option>
+                    <option value="O-">O- (O Negative)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="reg-input-age" class="form-label">
+                    Age (Years) <span style="color:var(--color-burgundy-600);">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="reg-input-age"
+                    class="form-input"
+                    min="18"
+                    max="65"
+                    placeholder="18 to 65"
+                    value="26"
+                  />
+                  <span class="form-hint">NBTC standard: 18–65</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="reg-input-weight" class="form-label">
+                    Weight (kg) <span style="color:var(--color-burgundy-600);">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="reg-input-weight"
+                    class="form-input"
+                    min="45"
+                    max="150"
+                    placeholder="Min 45 kg"
+                    value="68"
+                  />
+                  <span class="form-hint">Minimum 45 kg</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="reg-input-gender" class="form-label">Gender</label>
+                  <select id="reg-input-gender" class="form-select">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="card" style="padding:16px 20px; background-color:var(--color-blush-50); border:1px solid var(--color-blush-200); margin:16px 0;">
+                <label class="form-checkbox-label" style="margin-bottom:8px;">
+                  <input type="checkbox" id="reg-input-emergency-avail" checked />
+                  <strong>Available for Emergency Hospital Pledges</strong>
+                </label>
+                <p style="font-size:0.8125rem; color:var(--color-text-secondary); margin:0 0 12px 28px;">
+                  Allow verified hospital coordinators across Chandigarh, Punjab & Haryana to contact you for critical blood transfusions.
+                </p>
+
+                <label class="form-checkbox-label">
+                  <input type="checkbox" id="reg-input-health-dec" checked />
+                  <span>I declare that I am in good health, weigh at least 45 kg, and have no chronic transmissible medical conditions per NBTC guidelines.</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Section C2: Hospital-Specific Fields -->
+            <div id="reg-hospital-fields" class="role-specific-block" style="display:none;">
+              <div class="form-section-title">
+                <span>3</span> Healthcare Facility & Accreditation
+              </div>
+
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label for="reg-input-hospital" class="form-label">
+                    Hospital / Blood Center Name <span style="color:var(--color-burgundy-600);">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="reg-input-hospital"
+                    class="form-input"
+                    placeholder="e.g. PGIMER Chandigarh or Civil Hospital Mohali"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="reg-input-dept" class="form-label">Department / Unit</label>
+                  <input
+                    type="text"
+                    id="reg-input-dept"
+                    class="form-input"
+                    placeholder="e.g. Department of Transfusion Medicine"
+                    value="Department of Transfusion Medicine"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="reg-input-hosp-type" class="form-label">Facility Category</label>
+                  <select id="reg-input-hosp-type" class="form-select">
+                    <option value="Government">Government / Public Medical College</option>
+                    <option value="Charitable">Charitable / Red Cross / NGO</option>
+                    <option value="Private">Private Multi-Specialty Hospital</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section D: Statutory Privacy & DPDP Act Consent -->
+            <div class="form-section-title">
+              <span>4</span> Statutory Data Protection & Consent
+            </div>
+
+            <div class="card" style="padding:16px 20px; border:1px solid var(--border-light); margin-bottom:24px;">
+              <label class="form-checkbox-label">
+                <input type="checkbox" id="reg-input-dpdp" checked required />
+                <span>
+                  <strong>DPDP Act, 2023 Consent:</strong> I voluntarily consent to BloodLink India storing and processing my contact and clinical eligibility data strictly for lawful medical blood donation coordination and emergency requisition matching. I understand phone numbers are masked on public searches.
+                </span>
+              </label>
+            </div>
+
+            <button type="submit" id="btn-submit-register" class="btn btn-primary btn-block btn-lg">
+              Complete Registration & Enter BloodLink
+            </button>
+          </form>
+
+          <!-- Auth Footer Links -->
+          <div class="auth-card-footer">
+            <p>
+              Already have an account?
+              <a href="#login" class="auth-action-link" data-route="login">Sign In to BloodLink</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       2. MAIN DASHBOARD PORTAL VIEW (After Login)
+       ======================================================================== -->
+  <div id="dashboard-root-view" class="dashboard-root" style="display:none;">
+    
+    <!-- Top Dashboard Header Bar -->
+    <header class="dashboard-topbar">
+      <div class="container">
+        <div class="dashboard-topbar-inner">
+          <div class="topbar-left">
+            <a href="#home" class="topbar-brand" data-route="home">
+              <div class="brand-mark" style="width:32px; height:32px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+              </div>
+              <span>BloodLink <span style="font-size:0.75rem; font-weight:700; color:var(--color-rose-500); text-transform:uppercase;">India Portal</span></span>
+            </a>
+
+            <!-- Quick Role Simulator Dropdown Button -->
+            <div class="role-badge-selector" id="role-selector-toggle" onclick="openModal('modal-role-switcher')">
+              <span class="role-avatar-circle user-avatar-display">RS</span>
+              <span class="user-role-display">Transfusion Officer</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+
+          <div class="topbar-right">
+            <!-- Theme Toggle in Dashboard -->
+            <button class="theme-toggle-btn" id="theme-toggle-btn-dash" aria-label="Toggle theme" title="Toggle theme" onclick="document.getElementById('theme-toggle-btn').click()" style="padding:7px 12px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <button class="btn btn-sm btn-ghost" data-route="home">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+              Public Site
+            </button>
+            
+            <button class="btn btn-sm btn-primary" data-route="create-request">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Request Blood
+            </button>
+
+            <!-- User Menu Avatar -->
+            <div class="user-menu-btn" data-route="profile">
+              <div class="user-avatar-pill user-avatar-display">RS</div>
+              <div class="user-meta-text">
+                <div class="user-meta-name user-name-display">Dr. Raman Sharma</div>
+                <div class="user-meta-role user-role-display">PGIMER Chandigarh</div>
+              </div>
+            </div>
+
+            <!-- Sign Out Button -->
+            <button class="btn btn-sm btn-ghost" id="btn-dashboard-logout" title="Sign out of BloodLink" style="color:var(--color-burgundy-700); gap:6px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Navigation Tabs Bar -->
+    <nav class="dashboard-nav-bar" aria-label="Dashboard Section Navigation">
+      <div class="container">
+        <ul class="dashboard-nav-tabs">
+          <li>
+            <button class="dash-tab-btn active" data-view="overview">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              Dashboard Overview
+            </button>
+          </li>
+          <li>
+            <button class="dash-tab-btn" data-view="blood-banks">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-3"></path><path d="M9 9h1"></path><path d="M9 13h1"></path><path d="M9 17h1"></path></svg>
+              Nearby Blood Banks
+            </button>
+          </li>
+          <li>
+            <button class="dash-tab-btn" data-view="donor-search">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              Find Donors
+            </button>
+          </li>
+          <li>
+            <button class="dash-tab-btn" data-view="create-request">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+              Request Blood
+            </button>
+          </li>
+          <li>
+            <button class="dash-tab-btn" data-view="register-donor">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7.5" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+              Register as Donor
+            </button>
+          </li>
+          <li>
+            <button class="dash-tab-btn" data-view="tracking">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              Track Requests
+            </button>
+          </li>
+          <li>
+            <button class="dash-tab-btn" data-view="history">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              Donation History
+            </button>
+          </li>
+          <li>
+            <button class="dash-tab-btn" data-view="donor-reports" id="tab-btn-donor-reports">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              Donor Reports
+            </button>
+          </li>
+          <li>
+            <button class="dash-tab-btn" data-view="settings">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              Settings & APIs
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="dashboard-main-content">
+      <div class="container">
+
+        <!-- ====================================================================
+             DASHBOARD TAB 1: OVERVIEW
+             ==================================================================== -->
+        <div id="dash-view-overview">
+          
+          <!-- Welcome Area -->
+          <div class="welcome-card">
+            <div class="welcome-text">
+              <h2 id="dash-welcome-title">Good morning! Let's make a difference today.</h2>
+              <p id="dash-welcome-sub">Hospital Blood Bank Command: PGIMER Chandigarh. Coordinated under NBTC guidelines.</p>
+            </div>
+            <div class="welcome-actions">
+              <button class="btn btn-primary" data-route="donor-search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                Find a Donor
+              </button>
+              <button class="btn btn-secondary" data-route="blood-banks">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path></svg>
+                Nearby Blood Banks
+              </button>
+              <button class="btn btn-secondary" data-route="donor-reports" id="btn-welcome-donor-reports">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                Donor Reports
+              </button>
+            </div>
+          </div>
+
+          <!-- Overview Cards (4 Cards) -->
+          <div class="overview-cards-grid">
+            <div class="dash-stat-card">
+              <div class="dash-stat-info">
+                <h3 id="stat-total-blood-banks">24</h3>
+                <p>Total Blood Banks</p>
+                <div class="dash-stat-sub">Licensed in MoHFW Directory</div>
+              </div>
+              <div class="dash-stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path></svg>
+              </div>
+            </div>
+
+            <div class="dash-stat-card">
+              <div class="dash-stat-info">
+                <h3 id="stat-total-donors">0</h3>
+                <p>Available Donors</p>
+                <div class="dash-stat-sub">Verified real voluntary signups</div>
+              </div>
+              <div class="dash-stat-icon" style="background-color:var(--color-rose-100); color:var(--color-rose-600);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+              </div>
+            </div>
+
+            <div class="dash-stat-card">
+              <div class="dash-stat-info">
+                <h3 id="stat-pending-requests">2</h3>
+                <p>Pending Requests</p>
+                <div class="dash-stat-sub">Active matching in Tricity</div>
+              </div>
+              <div class="dash-stat-icon" style="background-color:var(--color-blush-200); color:var(--color-burgundy-800);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              </div>
+            </div>
+
+            <div class="dash-stat-card">
+              <div class="dash-stat-info">
+                <h3 id="stat-completed-requests">1</h3>
+                <p>Completed Requests</p>
+                <div class="dash-stat-sub">Transfused successfully</div>
+              </div>
+              <div class="dash-stat-icon" style="background-color:var(--color-success-bg); color:var(--color-success);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions (4 Simple Cards) -->
+          <div class="section-subtitle-bar">
+            <h3>Quick Actions</h3>
+          </div>
+          <div class="quick-actions-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="quick-action-card" data-route="donor-search">
+              <div class="qa-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </div>
+              <div class="qa-text">
+                <h4>Find a Donor</h4>
+                <p>Search compatible voluntary donors</p>
+              </div>
+            </div>
+
+            <div class="quick-action-card" data-route="create-request">
+              <div class="qa-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+              </div>
+              <div class="qa-text">
+                <h4>Request Blood</h4>
+                <p>Publish hospital emergency need</p>
+              </div>
+            </div>
+
+            <div class="quick-action-card" data-route="register-donor">
+              <div class="qa-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7.5" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+              </div>
+              <div class="qa-text">
+                <h4>Register as a Donor</h4>
+                <p>Join the verified volunteer roster</p>
+              </div>
+            </div>
+
+            <div class="quick-action-card" data-route="tracking">
+              <div class="qa-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              </div>
+              <div class="qa-text">
+                <h4>Track My Requests</h4>
+                <p>Monitor live delivery stages</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Split Panel: Urgent Requests & Recent Activity Timeline -->
+          <div class="dashboard-split-grid">
+            <!-- Urgent Requests List -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-danger)" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                  Urgent Blood Requests (Chandigarh Tricity & Region)
+                </h3>
+                <button class="btn btn-sm btn-ghost" data-route="create-request">+ New Request</button>
+              </div>
+              <div id="urgent-requests-list" class="urgent-items-list">
+                <!-- Rendered dynamically via app.js -->
+              </div>
+            </div>
+
+            <!-- Recent Activity Timeline -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  Recent Verified Activity
+                </h3>
+                <span class="status-pill normal">Live</span>
+              </div>
+              <div id="recent-activity-timeline" class="activity-timeline">
+                <div class="activity-item">
+                  <div class="activity-bullet">✓</div>
+                  <div class="activity-content">
+                    <div class="activity-title">Requisition #BL-IN-701 Logged at PGIMER</div>
+                    <div class="activity-detail">Critical 2 Units O- required for emergency cardiac surgery at ACC ICU 3</div>
+                    <div class="activity-time">Today, 10:30 AM</div>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-bullet">🩸</div>
+                  <div class="activity-content">
+                    <div class="activity-title">Donor Pledged at Civil Hospital Mohali</div>
+                    <div class="activity-detail">1 unit B+ mobilized for Sunita Rani (Maternity Ward)</div>
+                    <div class="activity-time">Today, 12:00 PM</div>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-bullet">🏥</div>
+                  <div class="activity-content">
+                    <div class="activity-title">Requisition #BL-IN-703 Fulfilled</div>
+                    <div class="activity-detail">3 Units A+ successfully transfused at General Hospital Sector 6 Panchkula</div>
+                    <div class="activity-time">Yesterday, 03:30 PM</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Blood Request Overview Table -->
+          <div class="table-panel">
+            <div class="panel-header">
+              <div>
+                <h3>Blood Request Overview</h3>
+                <p style="font-size:0.8125rem; margin-top:2px;">Live database records across Indian hospitals and health centers.</p>
+              </div>
+              <button class="btn btn-sm btn-secondary" data-route="tracking">Interactive Pipeline</button>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="clean-table">
+                <thead>
+                  <tr>
+                    <th>Request ID</th>
+                    <th>Patient / Hospital</th>
+                    <th>Blood Group</th>
+                    <th>Quantity</th>
+                    <th>Status</th>
+                    <th>Required By</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="requests-table-body">
+                  <!-- Rendered dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ====================================================================
+             DASHBOARD TAB 2: NEARBY BLOOD BANKS & INTERACTIVE MAP
+             ==================================================================== -->
+        <div id="dash-view-blood-banks" style="display:none;">
+          
+          <!-- e-RaktKosh Status & Integration Banner -->
+          <div class="eraktkosh-banner-card">
+            <div>
+              <div class="eraktkosh-badge-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                Official e-RaktKosh Platform Integration
+                <span class="status-pill fulfilled" style="font-size:0.6875rem;">MoHFW / C-DAC</span>
+              </div>
+              <div class="eraktkosh-badge-text">
+                Live blood stock counts across India are centralized on e-RaktKosh. You can verify real-time unit availability for any hospital directly on the official government portal.
+              </div>
+            </div>
+            <a id="eraktkosh-direct-link" href="https://eraktkosh.mohfw.gov.in/BLDA/bloodbank/stockAvailability.html" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+              Verify Live Stock on e-RaktKosh ↗
+            </a>
+          </div>
+
+          <!-- Map Panel -->
+          <div class="map-panel-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h3 style="font-size:1.1875rem;">Interactive Blood Bank Map of India</h3>
+                <p style="font-size:0.8125rem;">Featuring verified facilities in Chandigarh, Mohali (SAS Nagar), Panchkula, Punjab & Haryana.</p>
+              </div>
+              <span class="source-sync-pill">
+                OpenStreetMap & MoHFW Geocodes
+              </span>
+            </div>
+            <div id="leaflet-bloodbank-map" class="leaflet-map-box"></div>
+          </div>
+
+          <!-- Filter Bar -->
+          <div class="filter-bar-card">
+            <div class="filter-grid" style="grid-template-columns: 1.2fr 1.2fr 1.2fr 1.5fr;">
+              <div>
+                <label class="form-label" for="bb-filter-state">Filter by State / UT</label>
+                <select id="bb-filter-state" class="form-select">
+                  <!-- Populated dynamically via app.js -->
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="bb-filter-district">Filter by District</label>
+                <select id="bb-filter-district" class="form-select">
+                  <option value="all">All Districts</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="bb-filter-type">Hospital Category</label>
+                <select id="bb-filter-type" class="form-select">
+                  <option value="all">All Categories</option>
+                  <option value="Government">Government / Apex</option>
+                  <option value="Charitable">Charitable / Red Cross</option>
+                  <option value="Private">Private Hospital</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="bb-search-input">Search Facility Name or PIN</label>
+                <input type="text" id="bb-search-input" class="form-input" placeholder="e.g. PGIMER, GMCH, Mohali, 160012...">
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:0.8125rem;">
+              <span id="bb-results-count" style="color:var(--color-text-secondary); font-weight:600;"></span>
+              <span style="color:var(--color-text-muted);">Source: Open Government Data (OGD) Directory</span>
+            </div>
+          </div>
+
+          <!-- Cards Grid -->
+          <div id="blood-banks-cards-grid" class="blood-banks-grid">
+            <!-- Rendered dynamically via app.js -->
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             DASHBOARD TAB 3: DONOR SEARCH
+             ==================================================================== -->
+        <div id="dash-view-donor-search" style="display:none;">
+          <div class="filter-bar-card">
+            <div class="filter-grid" style="grid-template-columns: 1.2fr 1.2fr 1fr 1fr auto;">
+              <div>
+                <label class="form-label" for="donor-filter-state">State / UT</label>
+                <select id="donor-filter-state" class="form-select">
+                  <!-- Populated dynamically via app.js -->
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="donor-filter-district">District</label>
+                <select id="donor-filter-district" class="form-select">
+                  <option value="all">All Districts</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="filter-blood-group">Blood Group</label>
+                <select id="filter-blood-group" class="form-select">
+                  <option value="all">All Groups</option>
+                  <option value="O-">O- Negative</option>
+                  <option value="O+">O+ Positive</option>
+                  <option value="A-">A- Negative</option>
+                  <option value="A+">A+ Positive</option>
+                  <option value="B-">B- Negative</option>
+                  <option value="B+">B+ Positive</option>
+                  <option value="AB-">AB- Negative</option>
+                  <option value="AB+">AB+ Positive</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="donor-filter-pincode">Pincode</label>
+                <input type="text" id="donor-filter-pincode" class="form-input" placeholder="e.g. 160055">
+              </div>
+
+              <div style="padding-top:24px;">
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.875rem; cursor:pointer;">
+                  <input type="checkbox" id="filter-available-only" style="accent-color:var(--color-burgundy-700);">
+                  <span>Available Now</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Blood group pills quick selector -->
+            <div class="blood-pills-row">
+              <span style="font-size:0.8125rem; font-weight:700; color:var(--color-text-secondary); margin-right:8px;">Quick Filter:</span>
+              <button class="blood-pill-filter active" data-blood="all">All</button>
+              <button class="blood-pill-filter" data-blood="O-">O-</button>
+              <button class="blood-pill-filter" data-blood="O+">O+</button>
+              <button class="blood-pill-filter" data-blood="A-">A-</button>
+              <button class="blood-pill-filter" data-blood="A+">A+</button>
+              <button class="blood-pill-filter" data-blood="B-">B-</button>
+              <button class="blood-pill-filter" data-blood="B+">B+</button>
+              <button class="blood-pill-filter" data-blood="AB-">AB-</button>
+              <button class="blood-pill-filter" data-blood="AB+">AB+</button>
+              <span id="donor-search-count" style="margin-left:auto; font-size:0.8125rem; color:var(--color-text-muted);"></span>
+            </div>
+          </div>
+
+          <!-- Donors Cards Grid -->
+          <div id="donors-cards-grid" class="donors-grid">
+            <!-- Rendered dynamically via app.js -->
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             DASHBOARD TAB 4: CREATE BLOOD REQUEST
+             ==================================================================== -->
+        <div id="dash-view-create-request" style="display:none;">
+          <div class="form-panel-card">
+            <div style="margin-bottom:28px;">
+              <div class="eyebrow">Emergency Broadcast (India)</div>
+              <h2>Create Hospital Blood Requisition</h2>
+              <p>Publish an urgent or scheduled blood requirement for medical validation and immediate donor dispatch.</p>
+            </div>
+
+            <form id="form-create-request">
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="req-patient-name">Patient Full Name <span class="req">*</span></label>
+                  <input type="text" id="req-patient-name" class="form-input" placeholder="e.g. Jaswinder Kaur" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="req-hospital-name">Hospital / Medical Institute <span class="req">*</span></label>
+                  <input type="text" id="req-hospital-name" class="form-input" value="PGIMER Chandigarh (Sector 12)" required>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="req-state">State / UT <span class="req">*</span></label>
+                  <select id="req-state" class="form-select" required>
+                    <!-- Populated dynamically via app.js -->
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="req-district">District <span class="req">*</span></label>
+                  <select id="req-district" class="form-select" required>
+                    <option value="">Select District</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="req-blood-group">Blood Group Required <span class="req">*</span></label>
+                  <select id="req-blood-group" class="form-select" required>
+                    <option value="O-">O- Negative (Universal Red Cells)</option>
+                    <option value="O+">O+ Positive</option>
+                    <option value="A-">A- Negative</option>
+                    <option value="A+">A+ Positive</option>
+                    <option value="B-">B- Negative</option>
+                    <option value="B+">B+ Positive</option>
+                    <option value="AB-">AB- Negative</option>
+                    <option value="AB+">AB+ Positive</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="req-units">Units Required (Pints) <span class="req">*</span></label>
+                  <input type="number" id="req-units" class="form-input" min="1" max="10" value="2" required>
+                </div>
+              </div>
+
+              <!-- Urgency Selection -->
+              <div class="form-group">
+                <label class="form-label">Urgency Priority Level <span class="req">*</span></label>
+                <div class="urgency-radio-group">
+                  <label class="urgency-radio-label critical-opt">
+                    <input type="radio" name="req-urgency" value="critical">
+                    <strong style="color:var(--color-danger);">Critical (Life-Threatening)</strong>
+                    <span style="font-size:0.75rem; color:var(--color-text-muted); margin-top:4px;">Within 1–4 hours</span>
+                  </label>
+
+                  <label class="urgency-radio-label selected">
+                    <input type="radio" name="req-urgency" value="urgent" checked>
+                    <strong style="color:var(--color-warning);">Urgent Priority</strong>
+                    <span style="font-size:0.75rem; color:var(--color-text-muted); margin-top:4px;">Within 12 hours</span>
+                  </label>
+
+                  <label class="urgency-radio-label">
+                    <input type="radio" name="req-urgency" value="standard">
+                    <strong style="color:var(--color-info);">Standard Reserve</strong>
+                    <span style="font-size:0.75rem; color:var(--color-text-muted); margin-top:4px;">Within 24–48 hours</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="req-contact-name">Doctor / Hospital Attending Contact <span class="req">*</span></label>
+                  <input type="text" id="req-contact-name" class="form-input" value="Dr. Raman Sharma / Transfusion Lead" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="req-contact-phone">10-Digit Mobile Phone <span class="req">*</span></label>
+                  <input type="tel" id="req-contact-phone" class="form-input" placeholder="e.g. 9814077821" required>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="req-ward">Ward / Department</label>
+                  <input type="text" id="req-ward" class="form-input" placeholder="e.g. Advanced Cardiac Centre (ACC) ICU 3">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="req-required-by">Required By Time</label>
+                  <input type="text" id="req-required-by" class="form-input" value="Today, within 4 hours">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="req-notes">Clinical Indication & Surgery Notes</label>
+                <textarea id="req-notes" class="form-input" rows="3" placeholder="e.g. Emergency cardiovascular surgery. Whole blood / leukoreduced units requested."></textarea>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:28px;">
+                <button type="button" class="btn btn-secondary" data-route="overview">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-lg">Publish Emergency Request</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             DASHBOARD TAB 5: DONOR REGISTRATION (NBTC & DPDP COMPLIANT)
+             ==================================================================== -->
+        <div id="dash-view-register-donor" style="display:none;">
+          <div class="form-panel-card">
+            <div style="margin-bottom:28px;">
+              <div class="eyebrow">Voluntary Donor Network (India)</div>
+              <h2>Register as a Voluntary Blood Donor</h2>
+              <p>Your single donation can save up to three lives. Fill in your information to join our verified on-call roster.</p>
+            </div>
+
+            <form id="form-donor-register">
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="reg-name">Full Legal Name <span class="req">*</span></label>
+                  <input type="text" id="reg-name" class="form-input" placeholder="e.g. Gurinder Singh" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="reg-blood-group">Blood Group <span class="req">*</span></label>
+                  <select id="reg-blood-group" class="form-select" required>
+                    <option value="O-">O- Negative (Universal Red Cell Donor)</option>
+                    <option value="O+">O+ Positive</option>
+                    <option value="A-">A- Negative</option>
+                    <option value="A+">A+ Positive</option>
+                    <option value="B-">B- Negative</option>
+                    <option value="B+">B+ Positive</option>
+                    <option value="AB-">AB- Negative</option>
+                    <option value="AB+">AB+ Positive (Universal Recipient)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="reg-age">Age (NBTC Criteria: 18–65 years) <span class="req">*</span></label>
+                  <input type="number" id="reg-age" class="form-input" min="18" max="65" value="28" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="reg-weight">Weight in kg (NBTC Criteria: ≥ 45 kg) <span class="req">*</span></label>
+                  <input type="number" id="reg-weight" class="form-input" min="45" max="150" value="70" required>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="reg-phone">10-Digit Mobile Number <span class="req">*</span></label>
+                  <input type="tel" id="reg-phone" class="form-input" placeholder="e.g. 9814012345" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="reg-email">Email Address</label>
+                  <input type="email" id="reg-email" class="form-input" placeholder="yourname@gmail.com">
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="reg-state">State / UT in India <span class="req">*</span></label>
+                  <select id="reg-state" class="form-select" required>
+                    <!-- Populated dynamically via app.js -->
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="reg-district">District <span class="req">*</span></label>
+                  <select id="reg-district" class="form-select" required>
+                    <option value="">Select District</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="reg-city">City / Town</label>
+                  <input type="text" id="reg-city" class="form-input" placeholder="e.g. Mohali / Chandigarh">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="reg-pincode">Area Pincode (6 digits)</label>
+                  <input type="text" id="reg-pincode" class="form-input" placeholder="e.g. 160055">
+                </div>
+              </div>
+
+              <!-- NBTC & DPDP Act 2023 Compliance Checklist -->
+              <div class="form-group" style="background:var(--color-bg-base); padding:18px; border-radius:var(--radius-md); border:1px solid var(--border-subtle);">
+                <label class="form-label" style="margin-bottom:12px;">Regulatory Declarations & Informed Consent</label>
+                <div style="display:flex; flex-direction:column; gap:10px; font-size:0.875rem;">
+                  <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+                    <input type="checkbox" id="reg-health-checkbox" required style="accent-color:var(--color-burgundy-700); margin-top:3px;" checked>
+                    <span><strong>NBTC Health Declaration:</strong> I am feeling in good health, have no active fever or cold symptoms, and have not consumed alcohol in the last 24 hours.</span>
+                  </label>
+                  <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+                    <input type="checkbox" id="reg-consent-checkbox" required style="accent-color:var(--color-burgundy-700); margin-top:3px;" checked>
+                    <span><strong>DPDP Act 2023 Consent:</strong> I voluntarily consent to store my blood group and geographic district in the BloodLink database to receive emergency blood broadcast requests. My mobile number will remain masked from public web scrapers.</span>
+                  </label>
+                  <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                    <input type="checkbox" id="reg-available-toggle" style="accent-color:var(--color-burgundy-700);" checked>
+                    <span>Mark me as <strong>"Available Now"</strong> for emergency requests in my district.</span>
+                  </label>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+                <button type="button" class="btn btn-secondary" data-route="overview">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-lg">Complete Voluntary Registration</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             DASHBOARD TAB 6: REQUEST TRACKING PIPELINE
+             ==================================================================== -->
+        <div id="dash-view-tracking" style="display:none;">
+          <div class="tracking-pipeline-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:16px;">
+              <div>
+                <div class="eyebrow">Real-time Milestone Monitoring</div>
+                <h2>Blood Request Tracking Pipeline</h2>
+              </div>
+              <div style="min-width:280px;">
+                <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--color-text-secondary); display:block; margin-bottom:4px;">
+                  Select Active Requisition:
+                </label>
+                <select id="tracking-request-select" class="form-select">
+                  <!-- Dynamically populated via app.js -->
+                </select>
+              </div>
+            </div>
+
+            <!-- Case Summary Header -->
+            <div style="background:var(--color-bg-base); border-radius:var(--radius-lg); padding:20px 24px; border:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+              <div style="display:flex; align-items:center; gap:16px;">
+                <div id="track-blood-badge" class="badge-blood" style="width:48px; height:48px; font-size:1.25rem;">O-</div>
+                <div>
+                  <h3 id="track-patient-name" style="font-size:1.25rem; margin-bottom:2px;">Harpreet Singh Gill</h3>
+                  <div id="track-hospital-name" style="font-size:0.875rem; color:var(--color-text-secondary);">PGIMER Chandigarh • Advanced Cardiac Centre</div>
+                </div>
+              </div>
+              <div>
+                <div id="track-units-pledged" style="font-size:1.1rem; font-weight:700; color:var(--color-burgundy-900); text-align:right;">0 of 2 Units Pledged</div>
+                <div style="display:flex; align-items:center; gap:8px; justify-content:flex-end; margin-top:4px;">
+                  <span id="track-status-pill" class="status-pill matching">Matching</span>
+                  <span id="track-required-by" style="font-size:0.75rem; color:var(--color-text-muted);">Today, within 4 hours</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5-Step Stepper Pipeline -->
+            <div id="track-pipeline-steps" class="stepper-pipeline">
+              <!-- Rendered dynamically via app.js -->
+            </div>
+
+            <!-- Matched / Pledged Donors Section -->
+            <div style="margin-top:36px;">
+              <h4 style="font-size:1.125rem; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                Pledged Donors for this Request
+              </h4>
+              <div id="track-pledges-list">
+                <!-- Rendered dynamically via app.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             DASHBOARD TAB 7: DONATION HISTORY
+             ==================================================================== -->
+        <div id="dash-view-history" style="display:none;">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <div class="eyebrow">Life Saver Ledger</div>
+                <h2>Voluntary Donation History</h2>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="clean-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Hospital / Blood Bank</th>
+                    <th>Donation Type</th>
+                    <th>Recipient Impact</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>July 20, 2026</strong></td>
+                    <td>Civil Hospital / District Hospital Mohali (Phase 6)</td>
+                    <td>Whole Blood (350ml)</td>
+                    <td>Emergency Maternity Support</td>
+                    <td><span class="status-pill fulfilled">Completed</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>April 15, 2026</strong></td>
+                    <td>Rotary Blood Bank Resource Centre, Sector 37-A Chandigarh</td>
+                    <td>Whole Blood (350ml)</td>
+                    <td>Voluntary Blood Donation Camp</td>
+                    <td><span class="status-pill fulfilled">Completed</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             DASHBOARD TAB 8: SETTINGS & DATA SOURCES
+             ==================================================================== -->
+        <div id="dash-view-settings" style="display:none;">
+          <div class="form-panel-card">
+            <div style="margin-bottom:28px;">
+              <div class="eyebrow">Transparency & Architecture</div>
+              <h2>Data Sources & Platform Settings</h2>
+              <p>Verified information regarding official Indian integrations and clinical data provenance.</p>
+            </div>
+
+            <!-- Data Sources Overview -->
+            <div style="background:var(--color-bg-base); border-radius:var(--radius-lg); padding:24px; border:1px solid var(--border-subtle); margin-bottom:24px;">
+              <h4 style="margin-bottom:12px;">Active Verified Data Sources</h4>
+              <div style="display:flex; flex-direction:column; gap:12px; font-size:0.875rem;">
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-light); padding-bottom:8px;">
+                  <div>
+                    <strong>e-RaktKosh Platform (MoHFW / C-DAC)</strong>
+                    <div style="font-size:0.75rem; color:var(--color-text-muted);">Centralized Blood Bank Management System for India.</div>
+                  </div>
+                  <span class="status-pill fulfilled">Official MoHFW Portal</span>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-light); padding-bottom:8px;">
+                  <div>
+                    <strong>Open Government Data (OGD) data.gov.in</strong>
+                    <div style="font-size:0.75rem; color:var(--color-text-muted);">National Health Portal Licensed Blood Bank Directory.</div>
+                  </div>
+                  <span class="status-pill fulfilled">Licensed GODL</span>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-light); padding-bottom:8px;">
+                  <div>
+                    <strong>OpenStreetMap & Nominatim Geocoding</strong>
+                    <div style="font-size:0.75rem; color:var(--color-text-muted);">Server-cached geocoding restricted to Indian territory.</div>
+                  </div>
+                  <span class="status-pill normal">24h Server Cache</span>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; padding-top:4px;">
+                  <div>
+                    <strong>Digital Personal Data Protection (DPDP) Act 2023</strong>
+                    <div style="font-size:0.75rem; color:var(--color-text-muted);">Real voluntary donors with masked mobile protection.</div>
+                  </div>
+                  <span class="status-pill fulfilled">Privacy Compliant</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Role Simulator -->
+            <div style="background:var(--color-bg-base); border-radius:var(--radius-lg); padding:24px; border:1px solid var(--border-subtle);">
+              <h4 style="margin-bottom:8px;">Experience BloodLink India by Persona</h4>
+              <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;">
+                <button class="btn btn-sm btn-primary role-switch-btn" data-role="coordinator">
+                  Dr. Raman Sharma (PGIMER Chandigarh)
+                </button>
+                <button class="btn btn-sm btn-secondary role-switch-btn" data-role="donor">
+                  Gurinder Singh (Voluntary Donor, Mohali)
+                </button>
+                <button class="btn btn-sm btn-secondary role-switch-btn" data-role="seeker">
+                  Simranjit Kaur (Family Seeker, Chandigarh)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             DASHBOARD TAB: DONOR REPORTS
+             ==================================================================== -->
+        <div id="dash-view-donor-reports" style="display:none;">
+          <!-- Page Header -->
+          <div class="reports-page-header">
+            <div class="reports-header-title">
+              <div class="eyebrow">Clinical Records & Registry</div>
+              <h1 id="donor-reports-heading">Donor Reports</h1>
+              <p class="hero-subtext" style="font-size:0.9375rem; margin-top:4px; max-width:640px;">
+                View, manage, and export donor records.
+              </p>
+            </div>
+            <div class="reports-header-actions">
+              <button class="btn btn-secondary" id="btn-reports-export-excel" title="Download Excel workbook containing filtered donor records">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                Download Excel
+              </button>
+              <button class="btn btn-primary" id="btn-reports-export-pdf" title="Download formatted printable PDF report of filtered donor records">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI Summary Strip -->
+          <div class="reports-kpi-grid">
+            <div class="reports-kpi-card">
+              <div class="reports-kpi-icon burgundy">🩸</div>
+              <div>
+                <div class="reports-kpi-val" id="reports-kpi-total">0</div>
+                <div class="reports-kpi-label">Registered Donors</div>
+              </div>
+            </div>
+            <div class="reports-kpi-card">
+              <div class="reports-kpi-icon emerald">⚡</div>
+              <div>
+                <div class="reports-kpi-val" id="reports-kpi-available">0</div>
+                <div class="reports-kpi-label">Emergency Ready</div>
+              </div>
+            </div>
+            <div class="reports-kpi-card">
+              <div class="reports-kpi-icon navy">🛡️</div>
+              <div>
+                <div class="reports-kpi-val" id="reports-kpi-verified">0</div>
+                <div class="reports-kpi-label">Verified Volunteers</div>
+              </div>
+            </div>
+            <div class="reports-kpi-card">
+              <div class="reports-kpi-icon rose">📋</div>
+              <div>
+                <div class="reports-kpi-val" id="reports-kpi-donations">0</div>
+                <div class="reports-kpi-label">Total Donations</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter & Search Panel -->
+          <div class="reports-filter-panel">
+            <!-- Search bar -->
+            <div class="reports-search-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" id="reports-search-input" class="reports-search-input" placeholder="Search donors by name, donor ID (e.g. BL-DNR-IND-5062), or blood group (e.g. B+, O-)..." aria-label="Search donors by name, donor ID, or blood group">
+            </div>
+
+            <!-- Filter Controls Grid -->
+            <div class="reports-filters-grid">
+              <div>
+                <label class="reports-filter-label" for="reports-filter-blood-group">Blood Group</label>
+                <select id="reports-filter-blood-group" class="form-select">
+                  <option value="all">All Blood Groups</option>
+                  <option value="A+">A+ (A Positive)</option>
+                  <option value="A-">A- (A Negative)</option>
+                  <option value="B+">B+ (B Positive)</option>
+                  <option value="B-">B- (B Negative)</option>
+                  <option value="AB+">AB+ (AB Positive)</option>
+                  <option value="AB-">AB- (AB Negative)</option>
+                  <option value="O+">O+ (O Positive)</option>
+                  <option value="O-">O- (Universal Donor)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="reports-filter-label" for="reports-filter-state">State / UT</label>
+                <select id="reports-filter-state" class="form-select">
+                  <option value="all">All States</option>
+                  <!-- Populated dynamically via JS -->
+                </select>
+              </div>
+
+              <div>
+                <label class="reports-filter-label" for="reports-filter-district">District</label>
+                <select id="reports-filter-district" class="form-select">
+                  <option value="all">All Districts</option>
+                  <!-- Populated dynamically based on selected state -->
+                </select>
+              </div>
+
+              <div>
+                <label class="reports-filter-label" for="reports-filter-status">Donor Status</label>
+                <select id="reports-filter-status" class="form-select">
+                  <option value="all">All Statuses</option>
+                  <option value="available">Available for Emergency</option>
+                  <option value="busy">On-Call / Standby</option>
+                  <option value="inactive">Inactive / Unavailable</option>
+                </select>
+              </div>
+
+              <div class="reports-date-group">
+                <div>
+                  <label class="reports-filter-label" for="reports-filter-start-date">Date From</label>
+                  <input type="date" id="reports-filter-start-date" class="form-input" style="padding:8px 10px; font-size:0.8125rem;">
+                </div>
+                <div>
+                  <label class="reports-filter-label" for="reports-filter-end-date">Date To</label>
+                  <input type="date" id="reports-filter-end-date" class="form-input" style="padding:8px 10px; font-size:0.8125rem;">
+                </div>
+              </div>
+
+              <div>
+                <button type="button" class="btn btn-ghost" id="btn-reports-reset-filters" style="width:100%; border:1px solid var(--border-color); font-size:0.8125rem; height:38px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meta Bar (Count + Page size selector) -->
+          <div class="reports-meta-bar">
+            <div class="reports-count-badge" id="reports-summary-count">
+              Showing <strong>0</strong> matching donor records
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <label for="reports-page-size" style="font-size:0.8125rem; color:var(--color-text-secondary);">Rows:</label>
+              <select id="reports-page-size" class="form-select" style="width:auto; padding:4px 8px; font-size:0.8125rem; height:32px;">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Donor Table Container -->
+          <div class="reports-table-container">
+            <div class="table-responsive">
+              <table class="reports-table" aria-label="Donor Reports Directory Table">
+                <thead>
+                  <tr>
+                    <th scope="col">Donor ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Blood Group</th>
+                    <th scope="col">City</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Availability</th>
+                    <th scope="col">Last Donation</th>
+                    <th scope="col">Verification</th>
+                    <th scope="col" style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="reports-table-body">
+                  <!-- Populated dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty State Container -->
+            <div id="reports-empty-state" class="reports-empty-state" style="display:none;">
+              <div class="reports-empty-icon">🔍</div>
+              <h3>No Donor Records Match Your Criteria</h3>
+              <p>We couldn't find any voluntary donors matching your search or filters. Try adjusting your blood group, location filters, or date range.</p>
+              <button class="btn btn-secondary btn-sm" id="btn-reports-empty-reset">Reset All Filters</button>
+            </div>
+
+            <!-- Pagination Controls Bar -->
+            <div class="reports-pagination-bar" id="reports-pagination-bar">
+              <div class="reports-pagination-info" id="reports-pagination-info">
+                Page 1 of 1
+              </div>
+              <div class="reports-pagination-controls" id="reports-pagination-controls">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ========================================================================
+       MODALS & DIALOGS
+       ======================================================================== -->
+
+  <!-- Modal: Authentication / Quick Demo Sign-In -->
+  <div id="modal-auth-login" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Sign In to BloodLink India</h3>
+        <button class="modal-close-btn" data-modal-close="modal-auth-login">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.9375rem; color:var(--color-text-secondary); margin-bottom:20px;">
+          Choose a role persona to experience role-specific workflows across Chandigarh Tricity and Punjab/Haryana:
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:24px;">
+          <button class="btn btn-secondary demo-login-btn" data-role="coordinator" style="justify-content:flex-start; padding:12px 18px;">
+            <div class="role-avatar-circle" style="margin-right:8px;">RS</div>
+            <div style="text-align:left;">
+              <strong style="display:block;">Dr. Raman Sharma (Hospital Coordinator)</strong>
+              <span style="font-size:0.75rem; color:var(--color-text-muted);">PGIMER Chandigarh • Transfusion Medicine Officer</span>
+            </div>
+          </button>
+
+          <button class="btn btn-secondary demo-login-btn" data-role="donor" style="justify-content:flex-start; padding:12px 18px;">
+            <div class="role-avatar-circle" style="margin-right:8px; background-color:var(--color-rose-500);">GS</div>
+            <div style="text-align:left;">
+              <strong style="display:block;">Gurinder Singh (Voluntary Donor)</strong>
+              <span style="font-size:0.75rem; color:var(--color-text-muted);">SAS Nagar (Mohali), Punjab • Blood Group B+</span>
+            </div>
+          </button>
+
+          <button class="btn btn-secondary demo-login-btn" data-role="seeker" style="justify-content:flex-start; padding:12px 18px;">
+            <div class="role-avatar-circle" style="margin-right:8px; background-color:var(--color-burgundy-500);">SK</div>
+            <div style="text-align:left;">
+              <strong style="display:block;">Simranjit Kaur (Patient Family Seeker)</strong>
+              <span style="font-size:0.75rem; color:var(--color-text-muted);">Chandigarh • Requisition Creation & Bedside Delivery Tracking</span>
+            </div>
+          </button>
+        </div>
+
+        <div style="text-align:center; padding-top:16px; border-top:1px dashed var(--border-light);">
+          <button class="btn btn-outline-burgundy btn-sm" onclick="closeModal('modal-auth-login'); setView('login');" style="margin-right:8px;">
+            Open Login Page
+          </button>
+          <button class="btn btn-coral btn-sm" onclick="closeModal('modal-auth-login'); setView('register');">
+            Register New Account
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Role Switcher Simulator -->
+  <div id="modal-role-switcher" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Switch User Persona (India)</h3>
+        <button class="modal-close-btn" data-modal-close="modal-role-switcher">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="quick-action-card demo-login-btn" data-role="coordinator" onclick="closeModal('modal-role-switcher')">
+            <div class="qa-icon">🏥</div>
+            <div class="qa-text">
+              <h4>Dr. Raman Sharma (Hospital Coordinator)</h4>
+              <p>PGIMER Chandigarh • Transfusion Medicine Department</p>
+            </div>
+          </div>
+
+          <div class="quick-action-card demo-login-btn" data-role="donor" onclick="closeModal('modal-role-switcher')">
+            <div class="qa-icon" style="background-color:var(--color-rose-500);">🩸</div>
+            <div class="qa-text">
+              <h4>Gurinder Singh (Voluntary Donor)</h4>
+              <p>Mohali (SAS Nagar), Punjab • Blood Group B+</p>
+            </div>
+          </div>
+
+          <div class="quick-action-card demo-login-btn" data-role="seeker" onclick="closeModal('modal-role-switcher')">
+            <div class="qa-icon" style="background-color:var(--color-burgundy-500);">🤝</div>
+            <div class="qa-text">
+              <h4>Simranjit Kaur (Family Seeker)</h4>
+              <p>Chandigarh • Emergency Requisition Tracking</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Blood Request Details Dossier -->
+  <div id="modal-request-details" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-req-title">Requisition Dossier</h3>
+        <button class="modal-close-btn" data-modal-close="modal-request-details">✕</button>
+      </div>
+      <div class="modal-body" id="modal-req-body">
+        <!-- Rendered dynamically via app.js -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-modal-close="modal-request-details">Close</button>
+        <button class="btn btn-outline-burgundy" id="modal-req-track-btn">View Tracking</button>
+        <button class="btn btn-coral" id="modal-req-pledge-btn">Pledge 1 Unit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Individual Donor Report Dossier -->
+  <div id="modal-donor-report" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="dossier-donor-name">
+    <div class="modal-dialog modal-dossier-dialog">
+      <!-- Header -->
+      <div class="dossier-header-bar">
+        <div class="dossier-header-title">
+          <div class="dossier-header-brand-mark">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+          </div>
+          <div>
+            <div class="dossier-header-name" id="dossier-donor-name">Donor Clinical Dossier</div>
+            <div class="dossier-header-meta">
+              <span id="dossier-donor-id-pill" class="badge-donor-id" style="background:rgba(255,255,255,0.2); color:#FFFFFF; border-color:rgba(255,255,255,0.3);">BL-DNR-IND</span>
+              • BloodLink India Clinical Registry (NBTC / DPDP Act 2023)
+            </div>
+          </div>
+        </div>
+        <button class="modal-close-btn" data-modal-close="modal-donor-report" style="color:#FFFFFF; opacity:0.85;" title="Close Dossier" aria-label="Close Dossier">✕</button>
+      </div>
+
+      <!-- Action Toolbar -->
+      <div class="dossier-toolbar">
+        <div class="dossier-toolbar-left" id="dossier-auth-status-bar">
+          <!-- Auth indicator rendered dynamically -->
+        </div>
+        <div class="dossier-toolbar-buttons">
+          <button class="btn btn-sm btn-secondary" id="btn-donor-dossier-excel" title="Download this donor's report and donation history as an Excel workbook">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></svg>
+            Download Excel
+          </button>
+          <button class="btn btn-sm btn-primary" id="btn-donor-dossier-pdf" title="Download this donor's official dossier as a branded A4 PDF">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Download PDF
+          </button>
+          <button class="btn btn-sm btn-ghost" id="btn-donor-dossier-print" title="Print donor dossier">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Dossier Content -->
+      <div class="dossier-scroll-body" id="dossier-content-body">
+        <!-- Rendered dynamically via app.js -->
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer" style="justify-content:space-between;">
+        <div style="font-size:0.75rem; color:var(--color-text-muted);" id="dossier-timestamp-text">
+          Report Generated: 27 Oct 2026
+        </div>
+        <button class="btn btn-secondary" data-modal-close="modal-donor-report">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendor Export Libraries (Excel & PDF) -->
+  <script src="assets/js/vendor/xlsx.full.min.js"></script>
+  <script src="assets/js/vendor/jspdf.umd.min.js"></script>
+  <script src="assets/js/vendor/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Scripts -->
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

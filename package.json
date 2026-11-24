@@ -1,0 +1,18 @@
+{
+  "name": "bloodlink",
+  "version": "1.0.0",
+  "description": "BloodLink - Modern Blood Donation & Hospital Request Coordination Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "blood-donation",
+    "healthcare",
+    "donor-matching",
+    "bloodlink"
+  ],
+  "author": "BloodLink Team",
+  "license": "MIT"
+}
