@@ -1,13 +1,22 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "data/**"
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "index.html",
+          "assets/**",
+          "data/**"
+        ]
+      }
     }
-  },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { "source": "/((?!assets/|api/).*)", "destination": "/index.html" }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
   ]
 }
